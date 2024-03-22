@@ -1,0 +1,10 @@
+-- SQL query to showcase total revenue per movie
+
+SELECT 	title AS movie_name,	
+		ROUND(SUM(D.amount), 0) AS total_revenue
+FROM film AS A		
+INNER JOIN inventory B ON A.film_id = B.film_id		
+INNER JOIN rental C ON B.inventory_id = C.inventory_id		
+INNER JOIN payment D ON C.rental_id = D.rental_id		
+GROUP BY movie_name		
+ORDER BY total_revenue DESC		
