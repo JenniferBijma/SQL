@@ -10,5 +10,5 @@ I used SQL to manipulate the data and gain insights on it to answer the followin
 ● Where are customers with a high lifetime value based?
 ● Do sales figures vary between geographic regions?
 
-## [Tableau Visualisations] for the SQL project
-(https://public.tableau.com/views/3_10Rockbuster_17067795902790/Top5Customers?:language=en-US&:sid=&:display_count=n&:origin=viz_share_link)
+## [Tableau Visualisations](https://public.tableau.com/views/3_10Rockbuster_17067795902790/Top5Customers?:language=en-US&:sid=&:display_count=n&:origin=viz_share_link) for the SQL project
+
