@@ -1,0 +1,68 @@
+-- SQL query with common table expression for determining top cities:
+
+WITH TopCities AS (
+ SELECT
+ C.city,
+ COUNT(A.customer_id) AS customer_count
+ FROM
+ customer A
+ JOIN address E ON A.address_id = E.address_id
+ JOIN city C ON E.city_id = C.city_id
+ JOIN country D ON C.country_id = D.country_id
+ GROUP BY
+ C.city
+ ORDER BY
+ customer_count DESC
+ LIMIT 10
+)
+SELECT
+ ROUND(AVG(total_amount_paid), 2) AS average
+FROM (
+ SELECT
+ AVG(amount) AS total_amount_paid
+ FROM
+ customer A
+ INNER JOIN payment B ON A.customer_id = B.customer_id
+ INNER JOIN address E ON A.address_id = E.address_id
+ INNER JOIN city C ON E.city_id = C.city_id
+ INNER JOIN country D ON C.country_id = D.country_id
+ WHERE
+ C.city IN (SELECT city FROM TopCities)
+ GROUP BY
+ A.customer_id, A.first_name, A.last_name, D.country, C.city
+ ORDER BY
+ total_amount_paid DESC
+ LIMIT 5 )
+
+-- SQL query with a common table expression for determining top 10 countries:
+
+WITH TopCities AS (
+ SELECT
+ E.country,
+ D.city,
+ COUNT(B.customer_id) AS customer_count
+ FROM
+ customer B
+ LEFT JOIN address C ON B.address_id = C.address_id
+ LEFT JOIN city D ON C.city_id = D.city_id
+ LEFT JOIN country E ON D.country_id = E.country_id
+ GROUP BY
+ E.country, D.city
+ ORDER BY
+ customer_count DESC
+ LIMIT 10
+)
+SELECT
+ E.country,
+ COUNT(DISTINCT B.customer_id) AS all_customer_count,
+ COUNT(DISTINCT CASE WHEN B.customer_id IN (SELECT customer_id FROM TopCities) THEN
+B.customer_id END) AS top_customer_count
+FROM
+ customer B
+ LEFT JOIN address C ON B.address_id = C.address_id
+ LEFT JOIN city D ON C.city_id = D.city_id
+ LEFT JOIN country E ON D.country_id = E.country_id
+GROUP BY
+ E.country
+ORDER BY COUNT(customer_id) DESC
+LIMIT 10
